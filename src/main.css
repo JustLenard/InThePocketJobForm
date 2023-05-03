@@ -1,0 +1,8 @@
+/*
+    Just quick and dirty CSS to position my form. This is obviously now what I would've done for production.
+*/
+
+body {
+	background-color: gray;
+	padding-top: 5rem;
+}
