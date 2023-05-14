@@ -1,14 +1,18 @@
-import { Button, Col, Form, Input, InputNumber, Row, Space } from 'antd'
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons'
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+import { Button, Form, Input, Upload, UploadProps, message } from 'antd'
+import { Rule } from 'antd/es/form'
 import { useForm } from 'antd/es/form/Form'
 import AppCol from './AppCol'
-import { Rule } from 'antd/es/form'
-import TypedInputNumber from 'antd/es/input-number'
+import AppRow from './AppRow'
+import { validateMessages } from '../utils/formRules'
 
 interface JobForm {
 	firtName: string
 	lastName: string
 	email: string
-	phone: number
+	phone: string
 	resume: File
 	coverLater: File
 	linkedInProfile?: string
@@ -23,11 +27,12 @@ const handleSubmit = (values: JobForm) => {
 	console.log('This is values', values)
 }
 
-const fieldRequiered = 'Please fill in value'
-
-const stadartStringRules: Rule = {
-	min: 2,
-	max: 50,
+const normFile = (e: any) => {
+	console.log('Upload event:', e)
+	if (Array.isArray(e)) {
+		return e
+	}
+	return e?.fileList
 }
 
 const JobForm: React.FC = () => {
@@ -39,28 +44,21 @@ const JobForm: React.FC = () => {
 			layout="vertical"
 			onFinish={(values) => handleSubmit(values)}
 			name="jobForm"
+			validateMessages={validateMessages}
 		>
-			<Row justify={'space-between'}>
+			<AppRow>
 				<AppCol>
-					<Form.Item
-						name="firstName"
-						label="First Name"
-						rules={[{ required: true, message: fieldRequiered }]}
-					>
+					<Form.Item name="firstName" label="First Name">
 						<Input placeholder="Jhon" />
 					</Form.Item>
 				</AppCol>
 				<AppCol>
-					<Form.Item
-						label="Last name"
-						name="lastName"
-						rules={[{ required: true, message: fieldRequiered }]}
-					>
+					<Form.Item label="Last name" name="lastName" rules={[{ required: true }]}>
 						<Input placeholder="Smith" />
 					</Form.Item>
 				</AppCol>
-			</Row>
-			<Row justify={'space-between'}>
+			</AppRow>
+			<AppRow>
 				<AppCol>
 					<Form.Item
 						label="Email"
@@ -73,20 +71,28 @@ const JobForm: React.FC = () => {
 					</Form.Item>
 				</AppCol>
 				<AppCol>
-					<Form.Item
-						label="Phone"
-						name="phone"
-						rules={[{ required: true, message: fieldRequiered, type: 'number' }]}
-					>
-						<InputNumber placeholder="00 40 726 678 234" />
-						{/* <Input type="number" placeholder="00 40 726 678 234" /> */}
+					<Form.Item label="Phone" name="phone" rules={[{ required: true }]}>
+						<PhoneInput
+							inputStyle={{
+								width: '100%',
+							}}
+							inputClass="ant-input"
+							country={'us'}
+						/>
 					</Form.Item>
 				</AppCol>
-			</Row>
-			<Row justify={'space-between'}>
+			</AppRow>
+			<AppRow>
 				<AppCol>
-					<Form.Item label="Resume">
-						<Input placeholder=".doc, .docx or .pdf" />
+					<Form.Item
+						name="upload"
+						label="Upload"
+						valuePropName="fileList"
+						getValueFromEvent={normFile}
+					>
+						<Upload {...uplaodProps} accept="askf" name="logo" listType="text">
+							<Button icon={<UploadOutlined />}>Click to upload</Button>
+						</Upload>
 					</Form.Item>
 				</AppCol>
 				<AppCol>
@@ -94,8 +100,8 @@ const JobForm: React.FC = () => {
 						<Input placeholder=".doc, .docx or .pdf" />
 					</Form.Item>
 				</AppCol>
-			</Row>
-			<Row justify={'space-between'}>
+			</AppRow>
+			<AppRow>
 				<AppCol>
 					<Form.Item label="LinkedIn Profile (optional)">
 						<Input placeholder="https://www.linkedin.com/in/vitalie-cociug-39a80a145/" />
@@ -106,11 +112,11 @@ const JobForm: React.FC = () => {
 						<Input placeholder="www.yourWebsite.com" />
 					</Form.Item>
 				</AppCol>
-			</Row>
-			<Row justify={'space-between'}>
+			</AppRow>
+			<AppRow>
 				<AppCol>
 					<Form.Item label="If a current employee at In The Pocket referred you, please list their name.">
-						<Input placeholder="Greg Miller" />
+						<Input placeholder="Greg Miller" type="file" />
 					</Form.Item>
 				</AppCol>
 				<AppCol>
@@ -118,13 +124,31 @@ const JobForm: React.FC = () => {
 						<Input placeholder="Smith" />
 					</Form.Item>
 				</AppCol>
-			</Row>
+			</AppRow>
 
 			<Button htmlType="submit" type="primary" form="jobForm">
 				Submit
 			</Button>
 		</Form>
 	)
+}
+
+const uplaodProps: UploadProps = {
+	name: 'file',
+	action: 'https://httpbin.org/anything', // <--
+	headers: {
+		authorization: 'authorization-text',
+	},
+	onChange(info) {
+		if (info.file.status !== 'uploading') {
+			console.log(info.file, info.fileList)
+		}
+		if (info.file.status === 'done') {
+			message.success(`${info.file.name} file uploaded successfully`)
+		} else if (info.file.status === 'error') {
+			message.error(`${info.file.name} file upload failed.`)
+		}
+	},
 }
 
 export default JobForm
