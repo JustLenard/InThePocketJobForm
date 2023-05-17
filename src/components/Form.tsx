@@ -7,6 +7,7 @@ import { useForm } from 'antd/es/form/Form'
 import AppCol from './AppCol'
 import AppRow from './AppRow'
 import { validateMessages } from '../utils/formRules'
+import AppUpload from './AppUpload'
 
 interface JobForm {
 	firtName: string
@@ -90,9 +91,10 @@ const JobForm: React.FC = () => {
 						valuePropName="fileList"
 						getValueFromEvent={normFile}
 					>
-						<Upload {...uplaodProps} accept="askf" name="logo" listType="text">
+						{/* <Upload {...uplaodProps} accept="askf" name="logo" listType="text">
 							<Button icon={<UploadOutlined />}>Click to upload</Button>
-						</Upload>
+						</Upload> */}
+						<AppUpload name="le" />
 					</Form.Item>
 				</AppCol>
 				<AppCol>
@@ -131,24 +133,6 @@ const JobForm: React.FC = () => {
 			</Button>
 		</Form>
 	)
-}
-
-const uplaodProps: UploadProps = {
-	name: 'file',
-	action: 'https://httpbin.org/anything', // <--
-	headers: {
-		authorization: 'authorization-text',
-	},
-	onChange(info) {
-		if (info.file.status !== 'uploading') {
-			console.log(info.file, info.fileList)
-		}
-		if (info.file.status === 'done') {
-			message.success(`${info.file.name} file uploaded successfully`)
-		} else if (info.file.status === 'error') {
-			message.error(`${info.file.name} file upload failed.`)
-		}
-	},
 }
 
 export default JobForm
