@@ -1,5 +1,6 @@
 import { Card, Col, Row } from 'antd'
 import Form from './components/Form'
+import F2 from './components/f'
 
 const App: React.FC = () => {
 	return (
@@ -12,6 +13,7 @@ const App: React.FC = () => {
 					}}
 				>
 					<Form />
+					{/* <F2 /> */}
 				</Card>
 			</Col>
 		</Row>

@@ -1,48 +1,55 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { UploadOutlined } from '@ant-design/icons'
-import type { UploadProps } from 'antd'
 import { Button, message, Upload } from 'antd'
-import { RcFile } from 'antd/es/upload'
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
 
-const beforeUpload = (file: RcFile) => {
-	const isJpgOrPng = file.type === 'pdf' || file.type === 'image/png'
-	if (!isJpgOrPng) {
-		message.error('You can only upload JPG/PNG file!')
+const AppUpload: React.FC = () => {
+	const [fileList, setFileList] = useState<UploadFile | null>(null)
+	const [uploading, setUploading] = useState(false)
+
+	// const handleUpload = () => {
+	// 	const formData = new FormData()
+	// 	fileList.forEach((file) => {
+	// 		formData.append('files[]', file as RcFile)
+	// 	})
+	// 	setUploading(true)
+	// 	// You can use any AJAX library you like
+	// 	fetch('https://www.mocky.io/v2/5cc8019d300000980a055e76', {
+	// 		method: 'POST',
+	// 		body: formData,
+	// 	})
+	// 		.then((res) => res.json())
+	// 		.then(() => {
+	// 			setFileList([])
+	// 			message.success('upload successfully.')
+	// 		})
+	// 		.catch(() => {
+	// 			message.error('upload failed.')
+	// 		})
+	// 		.finally(() => {
+	// 			setUploading(false)
+	// 		})
+	// }
+
+	const props: UploadProps = {
+		onRemove: () => {
+			setFileList(null)
+		},
+		beforeUpload: (file) => {
+			setFileList(file)
+			return false
+		},
 	}
-	const isLt2M = file.size / 1024 / 1024 < 2
-	if (!isLt2M) {
-		message.error('Image must smaller than 2MB!')
-	}
-	return isJpgOrPng && isLt2M
-}
 
-const props: UploadProps = {
-	accept: '.jpg, .jpeg, .png',
-	beforeUpload,
-	action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-	headers: {
-		authorization: 'authorization-text',
-	},
-	onChange(info) {
-		if (info.file.status !== 'uploading') {
-			console.log(info.file, info.fileList)
-		}
-		if (info.file.status === 'done') {
-			message.success(`${info.file.name} file uploaded successfully`)
-		} else if (info.file.status === 'error') {
-			message.error(`${info.file.name} file upload failed.`)
-		}
-	},
-}
+	return (
+		// <Upload {...props} maxCount={1}>
+		// 	<Button icon={<UploadOutlined />}>Select File</Button>
+		// </Upload>
 
-interface Props {
-	name: string
+		<Upload name="logo" listType="text" beforeUpload={() => false}>
+			<Button icon={<UploadOutlined />}>Click to upload</Button>
+		</Upload>
+	)
 }
-
-const AppUpload: React.FC<Props> = ({ name }) => (
-	<Upload {...props} name={name}>
-		<Button icon={<UploadOutlined />}>Click to Upload</Button>
-	</Upload>
-)
 
 export default AppUpload

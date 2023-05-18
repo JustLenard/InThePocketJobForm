@@ -29,11 +29,14 @@ const handleSubmit = (values: JobForm) => {
 }
 
 const normFile = (e: any) => {
-	console.log('Upload event:', e)
 	if (Array.isArray(e)) {
 		return e
 	}
 	return e?.fileList
+}
+
+const handleUplaod = (e: React.ChangeEvent<HTMLInputElement>) => {
+	console.log('This is e.target.files', e.target.files)
 }
 
 const JobForm: React.FC = () => {
@@ -54,7 +57,7 @@ const JobForm: React.FC = () => {
 					</Form.Item>
 				</AppCol>
 				<AppCol>
-					<Form.Item label="Last name" name="lastName" rules={[{ required: true }]}>
+					<Form.Item label="Last name" name="lastName" rules={[]}>
 						<Input placeholder="Smith" />
 					</Form.Item>
 				</AppCol>
@@ -64,15 +67,13 @@ const JobForm: React.FC = () => {
 					<Form.Item
 						label="Email"
 						name="email"
-						rules={[
-							{ required: true, message: 'Please type a valid emai.', type: 'email' },
-						]}
+						rules={[{ message: 'Please type a valid emai.', type: 'email' }]}
 					>
 						<Input placeholder="Jhon.Smith@gmail.com" />
 					</Form.Item>
 				</AppCol>
 				<AppCol>
-					<Form.Item label="Phone" name="phone" rules={[{ required: true }]}>
+					<Form.Item label="Phone" name="phone" rules={[]}>
 						<PhoneInput
 							inputStyle={{
 								width: '100%',
@@ -86,20 +87,30 @@ const JobForm: React.FC = () => {
 			<AppRow>
 				<AppCol>
 					<Form.Item
+						name="coverLater"
+						label="Cover later"
+						valuePropName="fileList"
+						getValueFromEvent={normFile}
+					>
+						{/* <Upload name="logo" listType="text" beforeUpload={() => false}>
+							<Button icon={<UploadOutlined />}>Click to upload</Button>
+						</Upload> */}
+						<AppUpload />
+					</Form.Item>
+				</AppCol>
+				<AppCol>
+					{/* <Form.Item label="Cover Later">
+						<Input placeholder=".doc, .docx or .pdf" />
+					</Form.Item> */}
+					<Form.Item
 						name="upload"
 						label="Upload"
 						valuePropName="fileList"
 						getValueFromEvent={normFile}
 					>
-						{/* <Upload {...uplaodProps} accept="askf" name="logo" listType="text">
+						<Upload name="logo" listType="text" beforeUpload={() => false}>
 							<Button icon={<UploadOutlined />}>Click to upload</Button>
-						</Upload> */}
-						<AppUpload name="le" />
-					</Form.Item>
-				</AppCol>
-				<AppCol>
-					<Form.Item label="Cover Later">
-						<Input placeholder=".doc, .docx or .pdf" />
+						</Upload>
 					</Form.Item>
 				</AppCol>
 			</AppRow>
