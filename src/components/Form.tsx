@@ -27,7 +27,7 @@ const handleSubmit = (values: JobForm) => {
 	console.log('This is values', values)
 
 	// Create a test FormData object
-	var formData = new FormData()
+	const formData = new FormData()
 	formData.append('key1', 'value1')
 	formData.append('key2', 'value2')
 
